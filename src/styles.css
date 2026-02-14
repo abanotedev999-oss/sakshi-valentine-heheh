@@ -1,1 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
+/* Import cute fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+ 
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  overflow-x: hidden;
+  background-color: #ffe4e6;
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>❤️</text></svg>") 16 0, auto; /* Cute Cursor! */
+}
+
+/* --- ANIMATIONS --- */
+
+/* Floating Background Elements */
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+}
+.animate-float { animation: float linear infinite; }
+
+/* Heartbeat Pulse */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.animate-heartbeat { animation: heartbeat 1.5s infinite ease-in-out; }
+
+/* Pop In Effect */
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+/* --- NEW: EMOJI RAIN --- */
+@keyframes fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+.emoji-rain {
+  position: absolute;
+  top: -50px;
+  animation: fall 4s linear forwards;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* --- NEW: MOUSE TRAIL HEARTS --- */
+@keyframes fadeUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-50px) scale(0); opacity: 0; }
+}
+.trail-heart {
+  position: absolute;
+  pointer-events: none;
+  animation: fadeUp 1s ease-out forwards;
+  z-index: 9999;
+  font-size: 1.5rem;
+}

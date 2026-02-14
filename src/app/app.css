@@ -1,0 +1,2 @@
+:host { display: block; }
+button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
