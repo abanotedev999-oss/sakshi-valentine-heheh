@@ -21,3 +21,21 @@ button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   background-size: 400% 400%;
   animation: dreamyShine 15s ease infinite;
 }
+
+/* Container for the photo to handle the fade */
+.photo-container {
+  position: relative;
+  background-color: #f3f4f6; /* Gray placeholder */
+}
+
+/* The actual image */
+.photo-container img {
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  opacity: 1;
+}
+
+/* Add a class for when it's hidden/loading */
+.img-loading {
+  opacity: 0;
+  transform: scale(0.95);
+}

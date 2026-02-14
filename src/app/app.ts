@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
   confettiPieces: any[] = [];
   floatingElements: any[] = [];
   photoDecorations: any[] = []; // Decorative elements for the Memories stage
-
+isTransitioning = false;
   // --- BUTTON MECHANICS ---
   noBtnStyle: any = { position: 'static' };
   noBtnText = "No 💔";
@@ -164,12 +164,24 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   nextPhoto() {
-    if (this.currentPhotoIndex < this.photos.length - 1) {
+  if (this.isTransitioning) return; // Prevent double-clicks from skipping photos
+
+  if (this.currentPhotoIndex < this.photos.length - 1) {
+    this.isTransitioning = true;
+    
+    // We "pre-verify" the next image is ready
+    const nextImg = new Image();
+    nextImg.src = this.photos[this.currentPhotoIndex + 1].url;
+    
+    nextImg.onload = () => {
       this.currentPhotoIndex++;
-    } else {
-      this.stage = 'FINAL';
-    }
+      // Small delay to let the CSS fade-in finish neatly
+      setTimeout(() => { this.isTransitioning = false; }, 500);
+    };
+  } else {
+    this.stage = 'FINAL';
   }
+}
 
   // --- VISUAL GENERATORS ---
   createFloatingElements() {
