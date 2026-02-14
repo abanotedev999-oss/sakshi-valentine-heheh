@@ -1,2 +1,23 @@
 :host { display: block; }
 button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.photo-frame img {
+  transition: opacity 0.5s ease-in-out;
+  animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* Dreamy background shine */
+@keyframes dreamyShine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.dreamy-bg {
+  background: linear-gradient(-45deg, #fff1f2, #fdf2f8, #f5f3ff, #ecfdf5);
+  background-size: 400% 400%;
+  animation: dreamyShine 15s ease infinite;
+}

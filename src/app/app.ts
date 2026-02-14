@@ -9,27 +9,31 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./app.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  // Stages
+  // --- APP STATE ---
   stage: 'START' | 'ASK' | 'REASONS' | 'MEMORIES' | 'FINAL' = 'START';
   
-  // --- TIMER SETTINGS (UPDATED) ---
-  startDate = new Date('2021-10-28'); // Your date: Oct 28, 2021 (4 years!)
+  // --- TIMER SETTINGS ---
+  // Locked to your anniversary: October 28, 2021
+  startDate = new Date('2021-10-28'); 
   timeTogether: any = { days: 0, hours: 0, minutes: 0, seconds: 0 };
   timerInterval: any;
 
-  // --- MOUSE TRAIL VARIABLES ---
+  // --- INTERACTIVE VISUALS ---
   trailHearts: any[] = [];
-
-  // --- CONFETTI VARIABLES ---
   confettiPieces: any[] = [];
+  floatingElements: any[] = [];
+  photoDecorations: any[] = []; // Decorative elements for the Memories stage
 
-  // --- BUTTON VARIABLES ---
+  // --- BUTTON MECHANICS ---
   noBtnStyle: any = { position: 'static' };
   noBtnText = "No 💔";
   yesScale = 1;
-  noTexts = ["No? 🥺", "Don't do this!", "Think again!", "I'll cry...", "Pretty please?", "Last chance!", "You can't catch me! 🏃‍♂️"];
+  noTexts = [
+    "No? 🥺", "Don't do this!", "Think again!", "I'll cry...", 
+    "Pretty please?", "Last chance!", "You can't catch me! 🏃‍♂️"
+  ];
 
-  // --- REASONS LIST ---
+  // --- ROMANTIC CONTENT ---
   currentReasonIndex = 0;
   reasons = [
     "Because you have the cutest smile I have ever seen. 😊",
@@ -40,10 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
     "Because you are my best friend and my favorite person. 👫"
   ];
 
-  // --- PHOTOS LIST ---
-  // ... inside AppComponent class ...
-
-  // PHOTOS LIST (Updated for your specific pics!)
+  // --- PHOTO GALLERY ---
   currentPhotoIndex = 0;
   photos = [
     { 
@@ -64,40 +65,58 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   ];
 
-  // ... rest of the code ...
-
-  // --- BACKGROUND ICONS ---
-  floatingElements: any[] = [];
-
   ngOnInit() {
     this.createFloatingElements();
     this.startTimer();
+    this.preloadPhotos();  
+    this.createPhotoDecorations();
   }
 
   ngOnDestroy() {
-    clearInterval(this.timerInterval);
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
   }
 
-  // --- MOUSE TRAIL LOGIC (NEW!) ---
+  // --- LOGIC: PRELOAD & DECORATE ---
+  preloadPhotos() {
+    this.photos.forEach(photo => {
+      const img = new Image();
+      img.src = photo.url;
+    });
+  }
+
+  createPhotoDecorations() {
+    const icons = ['✨', '🌸', '🧸', '☁️', '🎈', '💖'];
+    for (let i = 0; i < 20; i++) {
+      this.photoDecorations.push({
+        left: Math.random() * 100 + '%',
+        top: Math.random() * 100 + '%',
+        icon: icons[Math.floor(Math.random() * icons.length)],
+        delay: Math.random() * 5 + 's',
+        size: (Math.random() * 1.5 + 1) + 'rem'
+      });
+    }
+  }
+
+  // --- LOGIC: INTERACTIVE MOUSE TRAIL ---
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(e: MouseEvent) {
-    // Only spawn a heart occasionally (every ~5th frame) to keep it fast
-    if (Math.random() > 0.85) {
+    if (Math.random() > 0.88) { // Spawn rate control
       const heart = {
         x: e.clientX,
         y: e.clientY,
-        id: Date.now() + Math.random() // Unique ID
+        id: Date.now() + Math.random()
       };
       this.trailHearts.push(heart);
 
-      // Remove heart after 1 second
       setTimeout(() => {
         this.trailHearts = this.trailHearts.filter(h => h.id !== heart.id);
       }, 1000);
     }
   }
 
-  // --- TIMER LOGIC ---
+  // --- LOGIC: TIMER ---
   startTimer() {
     this.timerInterval = setInterval(() => {
       const now = new Date().getTime();
@@ -113,14 +132,21 @@ export class AppComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  // --- GAMEPLAY FLOW ---
-  startApp() { this.stage = 'ASK'; }
+  // --- NAVIGATION & FLOW ---
+  startApp() { 
+    this.stage = 'ASK'; 
+  }
 
   moveNoButton() {
-    this.yesScale += 0.2;
+    this.yesScale += 0.25; // "Yes" button grows each time "No" is chased
     const x = Math.random() * (window.innerWidth - 150);
     const y = Math.random() * (window.innerHeight - 100);
-    this.noBtnStyle = { position: 'absolute', left: `${x}px`, top: `${y}px`, transition: 'all 0.2s ease-out' };
+    this.noBtnStyle = { 
+      position: 'absolute', 
+      left: `${x}px`, 
+      top: `${y}px`, 
+      transition: 'all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
+    };
     this.noBtnText = this.noTexts[Math.floor(Math.random() * this.noTexts.length)];
   }
 
@@ -145,17 +171,17 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  // --- VISUALS ---
+  // --- VISUAL GENERATORS ---
   createFloatingElements() {
     const icons = ['❤️', '🌸', '💖', '💌', '🧸', '✨'];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 35; i++) {
       this.floatingElements.push({
         left: Math.random() * 100 + 'vw',
-        animationDuration: Math.random() * 5 + 6 + 's',
-        delay: Math.random() * 5 + 's',
+        animationDuration: (Math.random() * 4 + 6) + 's',
+        delay: (Math.random() * 5) + 's',
         icon: icons[Math.floor(Math.random() * icons.length)],
-        size: Math.random() * 2 + 1 + 'rem',
-        opacity: Math.random() * 0.6 + 0.2
+        size: (Math.random() * 1.5 + 1) + 'rem',
+        opacity: Math.random() * 0.5 + 0.2
       });
     }
   }
@@ -164,13 +190,12 @@ export class AppComponent implements OnInit, OnDestroy {
     const emojis = ['🧸', '❤️', '💖', '😍', '💕', '🌹', '✨', '😻', '💝', '🍫', '🍭'];
     for (let i = 0; i < 150; i++) {
       this.confettiPieces.push({
-        left: Math.random() * 100 + 'vw',
-        animationDelay: Math.random() * 2 + 's',
         emoji: emojis[Math.floor(Math.random() * emojis.length)],
         style: {
-          left: Math.random() * 100 + 'vw',
-          animationDuration: (Math.random() * 3 + 2) + 's',
-          fontSize: (Math.random() * 20 + 20) + 'px'
+          left: (Math.random() * 100) + 'vw',
+          animationDuration: (Math.random() * 2 + 2) + 's',
+          animationDelay: (Math.random() * 1.5) + 's',
+          fontSize: (Math.random() * 15 + 20) + 'px'
         }
       });
     }
